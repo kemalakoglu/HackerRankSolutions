@@ -14,7 +14,6 @@ namespace LeetCode.Interview.Challenges
          *  1. INTEGER_ARRAY a
          *  2. INTEGER d
          */
-
         public static List<int> rotLeft(List<int> a, int d)
         {
             List<int> response = new List<int>();
@@ -37,7 +36,6 @@ namespace LeetCode.Interview.Challenges
  *
  * The function accepts INTEGER_ARRAY q as parameter.
  */
-
         public static void minimumBribes(List<int> q)
         {
             int bribe = 0;
@@ -107,5 +105,67 @@ namespace LeetCode.Interview.Challenges
 
 
         }
+
+
+        #region Longest Increasing Subsequence
+
+        // Binary search (note boundaries
+        // in the caller) A[] is ceilIndex
+        // in the caller
+        static int CeilIndex(int[] A, int l,
+                             int r, int key)
+        {
+            while (r - l > 1)
+            {
+                int m = l + (r - l) / 2;
+
+                if (A[m] >= key)
+                    r = m;
+                else
+                    l = m;
+            }
+
+            return r;
+        }
+
+        // Array, Binary Search, Dynamic Programming
+        // The loop runs for N elements.In the worst case (what is worst case input?), we may end up querying ceil value using binary search(log i) for many A[i].
+        // Therefore, T(n) < O(log N! )  = O(N log N). Analyse to ensure that the upper and lower bounds are also O(N log N ). The complexity is THETA(N log N).
+        public static int LengthOfLIS(int[] nums)
+        {
+            // Add boundary case, when array size
+            // is one
+
+            int[] tailTable = new int[nums.Length];
+            int len; // always points empty slot
+
+            tailTable[0] = nums[0];
+            len = 1;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                if (nums[i] < tailTable[0])
+                    // new smallest value
+                    tailTable[0] = nums[i];
+
+                else if (nums[i] > tailTable[len - 1])
+
+                    // A[i] wants to extend largest
+                    // subsequence
+                    tailTable[len++] = nums[i];
+
+                else
+
+                    // A[i] wants to be current end
+                    // candidate of an existing
+                    // subsequence. It will replace
+                    // ceil value in tailTable
+                    tailTable[CeilIndex(tailTable, -1,
+                                        len - 1, nums[i])]
+                        = nums[i];
+            }
+
+            return len;
+        }
+        #endregion
     }
 }
